@@ -102,19 +102,21 @@ fin
 
 proceso dejarPapeles
 comenzar
-  mientras (HayPapelEnLaEsquina)
-    tomarPapel
+  mientras (HayPapelEnLaBolsa)
+    depositarPapel
 fin
 
 proceso rectangulo3x5juntaPapeles
 comenzar
   repetir 2
-    repetir 3
+    mover
+    repetir 2
       juntarPapeles
       mover
     dejarPapeles
     derecha
-    repetir 5
+    mover
+    repetir 4
       juntarPapeles
       mover
     dejarPapeles
@@ -124,18 +126,20 @@ fin
 proceso rectangulo5x3juntaPapeles
 comenzar
   repetir 2
-    repetir 5
+    mover
+    repetir 4
       juntarPapeles
       mover
     dejarPapeles
     derecha
-    repetir 3
+    mover
+    repetir 2
       juntarPapeles
       mover
     dejarPapeles
     derecha
 fin
-  
+
 robot robot1
 comenzar
   rectangulo3x5juntaPapeles
