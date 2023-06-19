@@ -13,6 +13,7 @@ fin
 
 ### a
 ```
+robot robot1
 comenzar
   girar
   Pos(3,3)
@@ -23,6 +24,7 @@ fin
 ```
 ### b
 ```
+robot robot1
 comenzar
   girar
   Pos(1,4)
@@ -46,6 +48,7 @@ fin
 ![Figura 6.10: Recorridos usando rectángulos de 5x3.](img/fig-6.10.png)
 ### a
 ```
+robot robot1
 comenzar
   rectangulo3x5
   Pos(1, 5)
@@ -56,6 +59,7 @@ fin
 ```
 ### b
 ```
+robot robot1
 comenzar
   rectangulo3x5
   Pos(2, 2)
@@ -76,7 +80,8 @@ comenzar
       mover
     derecha
 fin
-  
+
+robot robot1
 comenzar
   rectangulo3x5
   Pos(7, 1)
@@ -131,6 +136,7 @@ comenzar
     derecha
 fin
   
+robot robot1
 comenzar
   rectangulo3x5juntaPapeles
   Pos(7, 1)
@@ -176,6 +182,7 @@ fin
 ```
 ### 7 (b) Escriba un programa que le permita al robot recoger todas las flores y papeles de la avenida 89, utilizando el proceso implementado en 7a).
 ```
+robot robot1
 comenzar
   Pos(89, 1)
   repetir 99
@@ -200,6 +207,7 @@ fin
 ```
 ### 7 (d) Rehacer el recorrido 4.b) utilizando el proceso definido en 7.c)
 ```
+robot robot1
 comenzar
   rectangulo3x5antihorarioLimpiador
   Pos(2, 2)
@@ -210,80 +218,61 @@ fin
 ```
 ### 8 Programe al robot para que recorra la ciudad de la siguiente manera: primero debe recorrer la avenida 1 juntando todas las flores que encuentre, luego debe recorrer la calle 1 juntando todos los papeles que encuentre. Luego recorre la avenida 2 y la calle 2 de la misma manera y así siguiendo. Implemente un módulo para recorrer la avenida y otro módulo para recorrer la calle.
 ```
-programa recorrer
-procesos
-  proceso izquierda
-  comenzar
-    repetir 3
-      derecha
-  fin
-  proceso RecorrerAvenida
-  comenzar
-    repetir 99
-      mover
-  fin
-  proceso RecorrerCalle
-  comenzar
-    repetir 99
-      mover
-  fin
-areas
-  ciudad: AreaC(1,1,100,100)
-robots
-  robot robot1
-  variables
-    actual: numero
-  comenzar
-    actual := 1
-    repetir 100
-      Pos(actual, 1)
-      RecorrerAvenida
-      derecha
-      Pos(1, actual)
-      RecorrerCalle
-      izquierda
-      actual := actual + 1
-  fin
-variables
-  R-info: robot1
+proceso izquierda
 comenzar
-  AsignarArea(R-info, ciudad)
-  Iniciar(R-info,1,1)
+  repetir 3
+    derecha
 fin
+proceso RecorrerAvenida
+comenzar
+  repetir 99
+    mover
+fin
+proceso RecorrerCalle
+comenzar
+  repetir 99
+    mover
+fin
+
+robot robot1
+variables
+  actual: numero
+comenzar
+  actual := 1
+  repetir 100
+    Pos(actual, 1)
+    RecorrerAvenida
+    derecha
+    Pos(1, actual)
+    RecorrerCalle
+    izquierda
+    actual := actual + 1
+fin
+
 ```
 ### 9 Realice un programa que le permita al robot recorrer las avenidas pares de la ciudad. Cada avenida debe recorrerse hasta encontrar una esquina con al menos 3 flores (la esquina seguro existe). MODULARICE.
 ```
-programa avenidasPares
-procesos
-  proceso recorrerAvPar
-  variables
-    floresEsq: numero
-  comenzar
-    floresEsq := 0
-    mientras (floresEsq < 3)
-      floresEsq := 0
-      mientras(HayFlorEnLaEsquina)
-        tomarFlor
-        floresEsq := floresEsq + 1
-      mover
-  fin
-areas
-  ciudad: AreaC(1,1,100,100)
-robots
-  robot robot1
-  variables
-    avenida: numero
-  comenzar
-    avenida := 2
-    repetir 50
-      Pos(avenida, 1)
-      recorrerAvPar
-      avenida := avenida + 2
-  fin
+proceso recorrerAvPar
 variables
-  R-info: robot1
+  floresEsq: numero
 comenzar
-  AsignarArea(R-info, ciudad)
-  Iniciar(R-info,1,1)
+  floresEsq := 0
+  mientras (floresEsq < 3)
+    floresEsq := 0
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      floresEsq := floresEsq + 1
+    mover
+fin
+
+robot robot1
+variables
+  avenida: numero
+comenzar
+  avenida := 2
+  repetir 50
+    Pos(avenida, 1)
+    recorrerAvPar
+    avenida := avenida + 2
 fin
 ```
