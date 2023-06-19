@@ -10,7 +10,8 @@ fin
 ```
 ### 2  Utilice el proceso desarrollado en 1. para realizar un programa para cada uno de los recorridos de la figura 6.9.
 ![Figura 6.9: Recorridos usando cuadrados de lado 2](img/fig-6.9.png)
-a
+
+### a
 ```
 comenzar
   girar
@@ -20,7 +21,7 @@ comenzar
   girar
 fin
 ```
-b
+### b
 ```
 comenzar
   girar
@@ -43,7 +44,7 @@ fin
 ```
 ### 4  Programe al Robot para que realice los recorridos de la figura 6.10 utilizando el proceso desarrollado en 3.
 ![Figura 6.10: Recorridos usando rectángulos de 5x3.](img/fig-6.10.png)
-a
+### a
 ```
 comenzar
   rectangulo3x5
@@ -53,7 +54,7 @@ comenzar
   rectangulo3x5
 fin
 ```
-b
+### b
 ```
 comenzar
   rectangulo3x5
@@ -63,7 +64,7 @@ comenzar
   rectangulo3x5  
 fin
 ```
-c
+### c
 ```
 proceso rectangulo5x3
 comenzar
