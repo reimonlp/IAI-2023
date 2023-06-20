@@ -313,7 +313,7 @@ comenzar
   floresEsq := 0
   mientras (floresEsq < 3)
     floresEsq := 0
-    mientras(HayFlorEnLaEsquina)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       floresEsq := floresEsq + 1
     mover
