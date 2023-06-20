@@ -367,9 +367,9 @@ fin
 ```
 proceso juntarFyP
 comenzar
-  mientras(HayFlorEnLaEsquina)
+  mientras (HayFlorEnLaEsquina)
     tomarFlor
-  mientras(HayPapelEnLaEsquina)
+  mientras (HayPapelEnLaEsquina)
     tomarPapel
 fin
 
@@ -379,7 +379,7 @@ variables
 comenzar
   pasos := 0
 
-  mientras(HayFlorEnLaEsquina | HayPapelEnLaEsquina)
+  mientras ((HayFlorEnLaEsquina) | (HayPapelEnLaEsquina))
     juntarFyP
     pasos := pasos + 1
     mover
@@ -394,9 +394,9 @@ comenzar
   soloFlor := 0
 
   repetir 100
-    si(HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
+    si ((HayFlorEnLaEsquina) & ~(HayPapelEnLaEsquina))
       soloFlor := soloFlor + 1
-    si(PosCa < 100)
+    si (PosCa < 100)
       mover
   
   Informar('esquinasSolamenteTenianFlor', soloFlor)
@@ -412,10 +412,13 @@ comenzar
   repetir 50
     Pos(avenida, 1)
     AvImpar
-
+    avenida := avenida + 1
+    
     Pos(avenida, 1)
     AvPar
+    avenida := avenida + 1
 fin
+
 ```
 ##
 ### 9. Realice un programa que le permita al robot recorrer el perímetro de la ciudad juntando todas las flores. Al terminar el perímetro informar la cantidad total de flores juntadas. Luego, debe recorrer la avenida 25 de la ciudad hasta encontrar una esquina con flor y sin papel.
@@ -429,7 +432,7 @@ comenzar
   Pos(1, 1)
   repetir 4
     repetir 99
-      mientras(HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
         tomarFlor
         flores := flores + 1
       mover
@@ -438,10 +441,17 @@ comenzar
 fin
 
 proceso recorrerAv25
+variables
+  interrumpir: boolean
 comenzar
+  interrumpir := F
   Pos(25, 1)
-  mientras(HayFlorEnLaEsquina & ~HayPapelEnLaEsquina & PosCa < 100)
-    mover
+  
+  mientras ~(interrumpir)
+    si ((HayFlorEnLaEsquina & ~(HayPapelEnLaEsquina)) | (PosCa = 100))
+      interrumpir := V
+    sino
+      mover
 fin
 ```
 ```
