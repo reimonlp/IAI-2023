@@ -10,12 +10,14 @@ variables
   forzarSig: boolean
 comenzar
   forzarSig := F
+
   mientras (~(~HayFlorEnLaEsquina & ~HayPapelEnLaEsquina) & ~forzarSig)
+    flores := 0
     mientras(HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
 
-    mientras(HayFlorEnLaBolsa)
+    repetir flores
       depositarFlor
 
     si (PosCa < 100)
@@ -211,25 +213,239 @@ fin
 ### 6. Programe al robot para recorrer las avenidas de la ciudad de la siguiente forma. Las avenidas impares debe recorrerlas hasta encontrar una esquina con exactamente 3 flores o 15 papeles (la esquina seguro existe). En las avenidas pares debe avanzar hasta encontrar una esquina vacía (la esquina puede no existir), y si la encuentra debe informar la cantidad de pasos dados.
 ### Nota: No modifique el contenido de las esquinas.
 ```
+proceso AvImpar
+variables
+  flores: numero
+  papeles: numero
+comenzar
+  flores := 0
+  papeles := 0
+
+  mientras (flores <> 3 & papeles <> 15)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+    repetir flores
+      depositarFlor
+
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+    repetir papeles
+      depositarPapel
+
+    si (flores <> 3 & papeles <> 15)
+      mover
+
+    flores := 0
+    papeles := 0
+fin
+
+proceso AvPar
+variables
+  pasos: numero
+  vacia: boolean
+comenzar
+  pasos := 0
+  vacia := F
+
+  mientras(~vacia & PosCa < 100)
+    vacia := vacia | ~(HayFlorEnLaEsquina & HayPapelEnLaEsquina)
+    si (~vacia)
+      pasos := pasos + 1
+      mover
+
+  vacia := vacia | ~(HayFlorEnLaEsquina & HayPapelEnLaEsquina)
+  si (vacia)
+    Informar('PasosDados', pasos)
+fin
+
+robot robot1
+variables
+  avenida: numero
+comenzar
+  avenida := 1
+
+  repetir 50
+    Pos(avenida, 1)
+    AvImpar
+
+    Pos(avenida, 1)
+    AvPar
+fin
 ```
 ##
 ### 7. Realice un programa que le permita al robot recorrer las calles de la ciudad. Al finalizar cada calle debe informar V si tuvo más papeles que flores o F en caso contrario.
 ### Nota: No modifique el contenido de las esquinas.
 ```
+proceso recorrerCalleInformarMasPapelesQueFlores
+variables
+  papeles: numero
+  flores: numero
+comenzar
+  flores := 0
+  papeles := 0
+
+  mientras(HayFlorEnLaEsquina)
+    tomarFlor
+    flores := flores + 1
+  repetir flores
+    depositarFlor
+
+  mientras(HayPapelEnLaEsquina)
+    tomarPapel
+    papeles := papeles + 1
+  repetir papeles
+    depositarPapel
+
+  Informar('MasPapelesQueFlores', papeles > flores)
+fin
+
+robot robot1
+variables
+  calle: numero
+comenzar
+  calle := 1
+
+  derecha
+  repetir 100
+    Pos(1, calle)
+    recorrerCalleInformarMasPapelesQueFlores
+    calle := calle + 1
+fin
 ```
 ##
 ### 8. Realice un programa que le permita al robot recorrer las avenidas de la ciudad de la siguiente forma.
 ### - Las avenidas impares debe recorrerlas hasta encontrar una esquina originalmente vacía (sin flor ni papel, seguro existe), por cada esquina transitada debe juntar todas las flores y papeles. Al encontrar la esquina, informar la cantidad de pasos dados.
 ### - Las avenidas pares deben recorrerse completas e informar al final de su recorrido la cantidad de esquinas que solamente tenían flor.
 ```
+proceso juntarFyP
+comenzar
+  mientras(HayFlorEnLaEsquina)
+    tomarFlor
+  mientras(HayPapelEnLaEsquina)
+    tomarPapel
+fin
+
+proceso AvImpar
+variables
+  pasos: numero
+comenzar
+  pasos := 0
+
+  mientras(HayFlorEnLaEsquina | HayPapelEnLaEsquina)
+    juntarFyP
+    pasos := pasos + 1
+    mover
+  
+  Informar('PasosDados', pasos)
+fin
+
+proceso AvPar
+variables
+  soloFlor: numero
+comenzar
+  soloFlor := 0
+
+  repetir 100
+    si(HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
+      soloFlor := soloFlor + 1
+    si(PosCa < 100)
+      mover
+  
+  Informar('esquinasSolamenteTenianFlor', soloFlor)
+fin
+
+robot robot1
+variables
+  avenida: numero
+comenzar
+  avenida := 1
+
+  repetir 50
+    Pos(avenida, 1)
+    AvImpar
+
+    Pos(avenida, 1)
+    AvPar
+fin
 ```
 ##
 ### 9. Realice un programa que le permita al robot recorrer el perímetro de la ciudad juntando todas las flores. Al terminar el perímetro informar la cantidad total de flores juntadas. Luego, debe recorrer la avenida 25 de la ciudad hasta encontrar una esquina con flor y sin papel.
 ```
+proceso perimetro
+variables
+  flores: numero
+comenzar
+  flores := 0
+
+  Pos(1, 1)
+  repetir 4
+    repetir 99
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        flores := flores + 1
+      mover
+    derecha
+  Informar('totalFloresJuntadas', flores)
+fin
+
+proceso recorrerAv25
+comenzar
+  Pos(25, 1)
+  mientras(HayFlorEnLaEsquina & ~HayPapelEnLaEsquina & PosCa < 100)
+    mover
+fin
+
+robot robot1
+comenzar
+  perimetro
+  recorrerAv25
+fin
 ```
 ##
 ### 10. Realice un programa que le permita al robot recorrer la ciudad hasta encontrar una esquina con flor y sin papel (la cual puede no existir). Si la encuentra debe recorrer la calle 20 juntado todas las flores e informar al final de su recorrido la cantidad total juntada.
 ```
+proceso recorrerCiudadBuscando
+variables
+  avenida: numero
+  cumple: boolean
+comenzar
+  avenida := 1
+  cumple := F
+
+  mientras(avenida <= 100 & ~cumple)
+    Pos(avenida, 1)
+    mientras(~cumple & PosCa < 100)
+      cumple := (HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
+      si (~cumple)
+        mover
+    cumple := (HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
+
+  si (cumple)
+    derecha
+    recorrerCalle20
+
+proceso recorrerCalle20
+variables
+  flores: numero
+comenzar
+  flores := 0
+  Pos(1, 20)
+
+  repetir 100
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+    si(PosAv < 100)
+      mover
+  Informar('totalFloresJuntadas', flores)
+fin
+
+robot robot1
+comenzar
+  recorrerCiudadBuscando
+fin
 ```
 
 ### 11. Realice un programa que le permita al robot recorrer todas las avenidas de la ciudad. Cada avenida debe recorrerse hasta encontrar una esquina con exactamente 50 objetos (suma entre flores y papeles, por ejemplo: 20 flores y 30 papeles). Al finalizar cada avenida debe informar V, si encontró más flores que papeles, o F en caso contrario.
