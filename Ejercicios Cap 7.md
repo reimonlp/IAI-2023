@@ -95,4 +95,10 @@ Hexadecimal:  02CD
 
 ### 15 Sume los números binarios 11010111 y 100101. Luego exprese el resultado en hexadecimal.
 ```
+ 11010111
++  100101
+ --------
+ 11111100
+
+Hexadecimal:  FC
 ```
