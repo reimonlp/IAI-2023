@@ -11,9 +11,9 @@ variables
 comenzar
   interrumpir := F
 
-  mientras ((HayFlorEnLaEsquina | HayPapelEnLaEsquina) & ~interrumpir)
+  mientras ((HayFlorEnLaEsquina | HayPapelEnLaEsquina) & ~(interrumpir))
     flores := 0
-    mientras(HayFlorEnLaEsquina)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
 
@@ -47,9 +47,9 @@ fin
 ```
 proceso juntarFyP
 comenzar
-  mientras(HayFlorEnLaEsquina)
+  mientras (HayFlorEnLaEsquina)
     tomarFlor
-  mientras(HayPapelEnLaEsquina)
+  mientras (HayPapelEnLaEsquina)
     tomarPapel
 fin
 
@@ -61,11 +61,11 @@ comenzar
   flores := 0
   papeles := 0
 
-  mientras(HayFlorEnLaBolsa)
+  mientras (HayFlorEnLaBolsa)
     depositarFlor
     flores := flores + 1
 
-  mientras(HayPapelEnLaBolsa)
+  mientras (HayPapelEnLaBolsa)
     depositarPapel
     papeles := papeles + 1
 
@@ -117,16 +117,18 @@ variables
   flores: numero
   interrumpir: boolean
 comenzar
+  flores := 0
   interrumpir := F
-  mientras(flores < 10 & ~interrumpir)
-    mientras(HayFlorEnLaEsquina)
+  
+  mientras ~(interrumpir)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
 
-    si(PosAv < 100)
-      mover
-    si(PosAv = 100)
+    si ((PosAv = 100) | (flores >= 10))
       interrumpir := V
+    sino
+      mover
 fin
 
 proceso izquierda
@@ -137,16 +139,16 @@ fin
 
 proceso juntarPapeles
 comenzar
-    mientras(HayPapelEnLaEsquina)
-      tomarPapel
+  mientras (HayPapelEnLaEsquina)
+    tomarPapel
 fin
 
 proceso recorrerAvenida
 comenzar
-  repetir 99
+  repetir 100
     juntarPapeles
-    mover
-  juntarPapeles
+    si (PosCa < 100)
+      mover
 fin
 ```
 ```
@@ -179,44 +181,46 @@ variables
   flores: numero
   interrumpir: boolean
 comenzar
+  flores := 0
   interrumpir := F
-  mientras(flores < 10 & ~interrumpir)
-    mientras(HayFlorEnLaEsquina & flores < 10)
+
+  mientras ~(interrumpir)
+    mientras ((HayFlorEnLaEsquina) & (flores < 10))
       tomarFlor
       flores := flores + 1
 
-    si(PosAv < 100)
-      mover
-    si(PosAv = 100 | flores = 10)
+    si ((PosAv = 100) | (flores = 10))
       interrumpir := V
+    sino
+      mover
 fin
 ```
 ##
 ### 5. Programe al robot para recorrer las primeras 10 calles de la ciudad. En cada calle debe juntar las flores y los papeles. Al finalizar cada calle informar la cantidad de esquinas con el doble de flores que papeles.
 ```
-recorrerCalleDobleFP
+proceso recorrerCalleDobleFP
 variables
   flores: numero
   papeles: numero
   doblesFP: numero
 comenzar
-  flores := 0
-  papeles := 0
   doblesFP := 0
 
   repetir 100
-    mientras(HayFlorEnLaEsquina)
+    flores := 0
+    papeles := 0
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
 
-    mientras(HayPapelEnLaEsquina)
+    mientras (HayPapelEnLaEsquina)
       tomarPapel
       papeles := papeles + 1
     
-    si (flores = (papeles * 2))
+    si ((flores > 0) & (flores = (papeles * 2)))
       doblesFP := doblesFP + 1
     
-    si(PosAv < 100)
+    si (PosAv < 100)
       mover
   Informar('esquinasDobleDeFloresQuePapeles', doblesFP)
 fin
@@ -243,24 +247,28 @@ proceso AvImpar
 variables
   flores: numero
   papeles: numero
+  interrumpir: boolean
 comenzar
   flores := 0
   papeles := 0
+  interrumpir := F
 
-  mientras (flores <> 3 & papeles <> 15)
-    mientras(HayFlorEnLaEsquina)
+  mientras ~(interrumpir)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
     repetir flores
       depositarFlor
 
-    mientras(HayPapelEnLaEsquina)
+    mientras (HayPapelEnLaEsquina)
       tomarPapel
       papeles := papeles + 1
     repetir papeles
       depositarPapel
 
-    si (flores <> 3 & papeles <> 15)
+    si ((flores = 3) | (papeles = 15) | (PosCa = 100))
+      interrumpir := V
+    sino
       mover
 
     flores := 0
@@ -271,17 +279,20 @@ proceso AvPar
 variables
   pasos: numero
   vacia: boolean
+  interrumpir: boolean
 comenzar
   pasos := 0
   vacia := F
+  interrumpir := F
 
-  mientras(~vacia & PosCa < 100)
-    vacia := vacia | ~(HayFlorEnLaEsquina & HayPapelEnLaEsquina)
-    si (~vacia)
+  mientras ~(interrumpir)
+    vacia := (~(HayFlorEnLaEsquina) & ~(HayPapelEnLaEsquina))
+    interrumpir := ((vacia) | (PosCa = 100))
+    
+    si ~(interrumpir)
       pasos := pasos + 1
       mover
 
-  vacia := vacia | ~(HayFlorEnLaEsquina & HayPapelEnLaEsquina)
   si (vacia)
     Informar('PasosDados', pasos)
 fin
@@ -296,10 +307,13 @@ comenzar
   repetir 50
     Pos(avenida, 1)
     AvImpar
-
+    avenida := avenida + 1
+    
     Pos(avenida, 1)
     AvPar
+    avenida := avenida + 1
 fin
+
 ```
 ##
 ### 7. Realice un programa que le permita al robot recorrer las calles de la ciudad. Al finalizar cada calle debe informar V si tuvo más papeles que flores o F en caso contrario.
@@ -313,19 +327,23 @@ comenzar
   flores := 0
   papeles := 0
 
-  mientras(HayFlorEnLaEsquina)
-    tomarFlor
-    flores := flores + 1
-  repetir flores
-    depositarFlor
+  repetir 100
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
 
-  mientras(HayPapelEnLaEsquina)
-    tomarPapel
-    papeles := papeles + 1
-  repetir papeles
-    depositarPapel
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+    mientras (HayPapelEnLaBolsa)
+      depositarPapel
+      
+    si (PosAv < 100)
+      mover
 
-  Informar('MasPapelesQueFlores', papeles > flores)
+  Informar('MasPapelesQueFlores', (papeles > flores))
 fin
 ```
 ```
