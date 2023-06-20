@@ -11,23 +11,25 @@ variables
 comenzar
   interrumpir := F
 
-  mientras (~(~HayFlorEnLaEsquina & ~HayPapelEnLaEsquina) & ~interrumpir)
+  mientras ((HayFlorEnLaEsquina | HayPapelEnLaEsquina) & ~(interrumpir))
     flores := 0
-    mientras(HayFlorEnLaEsquina)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
 
     repetir flores
       depositarFlor
 
-    si (PosCa < 100)
-      mover
     si (PosCa = 100)
       interrumpir := V
+    sino
+      mover
 
   Informar('aLoSumo45Flores', flores >= 45)
 fin
 
+```
+```
 robot robot1
 variables
   avenida: numero
@@ -45,24 +47,53 @@ fin
 ```
 proceso juntarFyP
 comenzar
-  mientras(HayFlorEnLaEsquina)
+  mientras (HayFlorEnLaEsquina)
     tomarFlor
-  mientras(HayPapelEnLaEsquina)
+  mientras (HayPapelEnLaEsquina)
     tomarPapel
 fin
 
-proceso rectangulo
+proceso contarInformar
+variables
+  flores: numero
+  papeles: numero
 comenzar
-  repetir 2
-    juntarFyP
-    mover
+  flores := 0
+  papeles := 0
 
-    derecha
-    repetir 15
-      juntarFyP
-      mover
+  mientras (HayFlorEnLaBolsa)
+    depositarFlor
+    flores := flores + 1
+
+  mientras (HayPapelEnLaBolsa)
+    depositarPapel
+    papeles := papeles + 1
+
+  Informar('Flores', flores)
+  Informar('Papeles', papeles)
 fin
 
+proceso rectangulo
+variables
+  base: numero
+  alto: numero
+comenzar
+  base := 15
+  alto := 1
+
+  repetir 2
+    repetir alto
+      juntarFyP
+      mover
+    derecha
+
+    repetir base
+      juntarFyP
+      mover
+    derecha
+fin
+```
+```
 robot robot1
 variables
   flores: numero
@@ -75,15 +106,8 @@ comenzar
     rectangulo
     Pos(1, PosCa + 2)
 
-  mientras(HayFlorEnLaBolsa)
-    depositarFlor
-    flores := flores + 1
-  Informar('flores', flores)
-
-  mientras(HayPapelEnLaBolsa)
-    depositarPapel
-    papeles := papeles + 1
-  Informar('papeles', papeles)
+  contarInformar
+fin
 ```
 ##
 ### 3. Programe al robot para que recorra las calles impares de la ciudad. Cada calle debe recorrerse hasta juntar al menos 10 flores (que pueden no existir). Una vez que ha recorrido todas las calles debe recorrer la avenida 10, la avenida 11, y la avenida 12 juntando todos los papeles.
@@ -93,16 +117,18 @@ variables
   flores: numero
   interrumpir: boolean
 comenzar
+  flores := 0
   interrumpir := F
-  mientras(flores < 10 & ~interrumpir)
-    mientras(HayFlorEnLaEsquina)
+  
+  mientras ~(interrumpir)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
 
-    si(PosAv < 100)
-      mover
-    si(PosAv = 100)
+    si ((PosAv = 100) | (flores >= 10))
       interrumpir := V
+    sino
+      mover
 fin
 
 proceso izquierda
@@ -113,18 +139,19 @@ fin
 
 proceso juntarPapeles
 comenzar
-    mientras(HayPapelEnLaEsquina)
-      tomarPapel
+  mientras (HayPapelEnLaEsquina)
+    tomarPapel
 fin
 
 proceso recorrerAvenida
 comenzar
-  repetir 99
+  repetir 100
     juntarPapeles
-    mover
-  juntarPapeles
+    si (PosCa < 100)
+      mover
 fin
-
+```
+```
 robot robot1
 variables
   calle: numero
@@ -154,48 +181,51 @@ variables
   flores: numero
   interrumpir: boolean
 comenzar
+  flores := 0
   interrumpir := F
-  mientras(flores < 10 & ~interrumpir)
-    mientras(HayFlorEnLaEsquina & flores < 10)
+
+  mientras ~(interrumpir)
+    mientras ((HayFlorEnLaEsquina) & (flores < 10))
       tomarFlor
       flores := flores + 1
 
-    si(PosAv < 100)
-      mover
-    si(PosAv = 100 | flores = 10)
+    si ((PosAv = 100) | (flores = 10))
       interrumpir := V
+    sino
+      mover
 fin
 ```
 ##
 ### 5. Programe al robot para recorrer las primeras 10 calles de la ciudad. En cada calle debe juntar las flores y los papeles. Al finalizar cada calle informar la cantidad de esquinas con el doble de flores que papeles.
 ```
-recorrerCalleDobleFP
+proceso recorrerCalleDobleFP
 variables
   flores: numero
   papeles: numero
   doblesFP: numero
 comenzar
-  flores := 0
-  papeles := 0
   doblesFP := 0
 
   repetir 100
-    mientras(HayFlorEnLaEsquina)
+    flores := 0
+    papeles := 0
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
 
-    mientras(HayPapelEnLaEsquina)
+    mientras (HayPapelEnLaEsquina)
       tomarPapel
       papeles := papeles + 1
     
-    si (flores = (papeles * 2))
+    si ((flores > 0) & (flores = (papeles * 2)))
       doblesFP := doblesFP + 1
     
-    si(PosAv < 100)
+    si (PosAv < 100)
       mover
   Informar('esquinasDobleDeFloresQuePapeles', doblesFP)
 fin
-
+```
+```
 robot robot1
 variables
   calle: numero
@@ -217,24 +247,28 @@ proceso AvImpar
 variables
   flores: numero
   papeles: numero
+  interrumpir: boolean
 comenzar
   flores := 0
   papeles := 0
+  interrumpir := F
 
-  mientras (flores <> 3 & papeles <> 15)
-    mientras(HayFlorEnLaEsquina)
+  mientras ~(interrumpir)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
     repetir flores
       depositarFlor
 
-    mientras(HayPapelEnLaEsquina)
+    mientras (HayPapelEnLaEsquina)
       tomarPapel
       papeles := papeles + 1
     repetir papeles
       depositarPapel
 
-    si (flores <> 3 & papeles <> 15)
+    si ((flores = 3) | (papeles = 15) | (PosCa = 100))
+      interrumpir := V
+    sino
       mover
 
     flores := 0
@@ -245,21 +279,25 @@ proceso AvPar
 variables
   pasos: numero
   vacia: boolean
+  interrumpir: boolean
 comenzar
   pasos := 0
   vacia := F
+  interrumpir := F
 
-  mientras(~vacia & PosCa < 100)
-    vacia := vacia | ~(HayFlorEnLaEsquina & HayPapelEnLaEsquina)
-    si (~vacia)
+  mientras ~(interrumpir)
+    vacia := (~(HayFlorEnLaEsquina) & ~(HayPapelEnLaEsquina))
+    interrumpir := ((vacia) | (PosCa = 100))
+    
+    si ~(interrumpir)
       pasos := pasos + 1
       mover
 
-  vacia := vacia | ~(HayFlorEnLaEsquina & HayPapelEnLaEsquina)
   si (vacia)
     Informar('PasosDados', pasos)
 fin
-
+```
+```
 robot robot1
 variables
   avenida: numero
@@ -269,10 +307,13 @@ comenzar
   repetir 50
     Pos(avenida, 1)
     AvImpar
-
+    avenida := avenida + 1
+    
     Pos(avenida, 1)
     AvPar
+    avenida := avenida + 1
 fin
+
 ```
 ##
 ### 7. Realice un programa que le permita al robot recorrer las calles de la ciudad. Al finalizar cada calle debe informar V si tuvo más papeles que flores o F en caso contrario.
@@ -286,21 +327,26 @@ comenzar
   flores := 0
   papeles := 0
 
-  mientras(HayFlorEnLaEsquina)
-    tomarFlor
-    flores := flores + 1
-  repetir flores
-    depositarFlor
+  repetir 100
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
 
-  mientras(HayPapelEnLaEsquina)
-    tomarPapel
-    papeles := papeles + 1
-  repetir papeles
-    depositarPapel
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+    mientras (HayPapelEnLaBolsa)
+      depositarPapel
+      
+    si (PosAv < 100)
+      mover
 
-  Informar('MasPapelesQueFlores', papeles > flores)
+  Informar('MasPapelesQueFlores', (papeles > flores))
 fin
-
+```
+```
 robot robot1
 variables
   calle: numero
@@ -321,9 +367,9 @@ fin
 ```
 proceso juntarFyP
 comenzar
-  mientras(HayFlorEnLaEsquina)
+  mientras (HayFlorEnLaEsquina)
     tomarFlor
-  mientras(HayPapelEnLaEsquina)
+  mientras (HayPapelEnLaEsquina)
     tomarPapel
 fin
 
@@ -333,7 +379,7 @@ variables
 comenzar
   pasos := 0
 
-  mientras(HayFlorEnLaEsquina | HayPapelEnLaEsquina)
+  mientras ((HayFlorEnLaEsquina) | (HayPapelEnLaEsquina))
     juntarFyP
     pasos := pasos + 1
     mover
@@ -348,14 +394,15 @@ comenzar
   soloFlor := 0
 
   repetir 100
-    si(HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
+    si ((HayFlorEnLaEsquina) & ~(HayPapelEnLaEsquina))
       soloFlor := soloFlor + 1
-    si(PosCa < 100)
+    si (PosCa < 100)
       mover
   
   Informar('esquinasSolamenteTenianFlor', soloFlor)
 fin
-
+```
+```
 robot robot1
 variables
   avenida: numero
@@ -365,10 +412,13 @@ comenzar
   repetir 50
     Pos(avenida, 1)
     AvImpar
-
+    avenida := avenida + 1
+    
     Pos(avenida, 1)
     AvPar
+    avenida := avenida + 1
 fin
+
 ```
 ##
 ### 9. Realice un programa que le permita al robot recorrer el perímetro de la ciudad juntando todas las flores. Al terminar el perímetro informar la cantidad total de flores juntadas. Luego, debe recorrer la avenida 25 de la ciudad hasta encontrar una esquina con flor y sin papel.
@@ -382,7 +432,7 @@ comenzar
   Pos(1, 1)
   repetir 4
     repetir 99
-      mientras(HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
         tomarFlor
         flores := flores + 1
       mover
@@ -391,12 +441,20 @@ comenzar
 fin
 
 proceso recorrerAv25
+variables
+  interrumpir: boolean
 comenzar
+  interrumpir := F
   Pos(25, 1)
-  mientras(HayFlorEnLaEsquina & ~HayPapelEnLaEsquina & PosCa < 100)
-    mover
+  
+  mientras ~(interrumpir)
+    si ((HayFlorEnLaEsquina & ~(HayPapelEnLaEsquina)) | (PosCa = 100))
+      interrumpir := V
+    sino
+      mover
 fin
-
+```
+```
 robot robot1
 comenzar
   perimetro
@@ -410,21 +468,29 @@ proceso recorrerCiudadBuscando
 variables
   avenida: numero
   cumple: boolean
+  interrumpir: boolean
 comenzar
   avenida := 1
   cumple := F
+  interrumpir := F
 
-  mientras(avenida <= 100 & ~cumple)
+  mientras ~(interrumpir)
     Pos(avenida, 1)
-    mientras(~cumple & PosCa < 100)
-      cumple := (HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
-      si (~cumple)
+    mientras (~interrumpir)
+      cumple := ((HayFlorEnLaEsquina) & ~(HayPapelEnLaEsquina))
+      
+      si ((cumple) | (PosCa = 100))
+        interrumpir := V
+      sino
         mover
-    cumple := (HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
+        
+    interrumpir := ((cumple) | (PosAv = 100))
+    avenida := avenida + 1
 
   si (cumple)
     derecha
     recorrerCalle20
+fin
 
 proceso recorrerCalle20
 variables
@@ -437,11 +503,14 @@ comenzar
     mientras(HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
+      
     si(PosAv < 100)
       mover
+      
   Informar('totalFloresJuntadas', flores)
 fin
-
+```
+```
 robot robot1
 comenzar
   recorrerCiudadBuscando
@@ -451,26 +520,27 @@ fin
 ### 11. Realice un programa que le permita al robot recorrer todas las avenidas de la ciudad. Cada avenida debe recorrerse hasta encontrar una esquina con exactamente 50 objetos (suma entre flores y papeles, por ejemplo: 20 flores y 30 papeles). Al finalizar cada avenida debe informar V, si encontró más flores que papeles, o F en caso contrario.
 ### Nota: La esquina con 50 objetos puede no existir en cada avenida. No debe modificar el contenido de las esquinas.
 ```
-recorrerAv50Objetos
+proceso recorrerAv50Objetos
 variables
   flores: numero
   papeles: numero
   cumple: boolean
   interrumpir: boolean
 comenzar
-  flores := 0
-  papeles := 0
   cumple := F
   interrumpir := F
 
-  mientras(~interrumpir)
-    mientras(HayFlorEnLaEsquina)
+  mientras ~(interrumpir)
+    flores := 0
+    papeles := 0
+    
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
     repetir flores
       depositarFlor
 
-    mientras(HayPapelEnLaEsquina)
+    mientras (HayPapelEnLaEsquina)
       tomarPapel
       papeles := papeles + 1
     repetir papeles
@@ -478,26 +548,27 @@ comenzar
 
     cumple := ((flores + papeles) = 50)
 
-    si(PosCa = 100 | cumple)
+    si ((PosCa = 100) | (cumple))
       interrumpir := V
     sino
       mover
 
-    flores := 0
-    papeles := 0
-
-  Informar('MasFloresQuePapeles', flores > papeles)
+  Informar('MasFloresQuePapeles', (flores > papeles))
 fin
-
+```
+```
 robot robot1
 variables
-  avenida
+  avenida: numero
 comenzar
   avenida := 1
-  repetir 100
+  
+  repetir 10
     Pos(avenida, 1)
     recorrerAv50Objetos
+    avenida := avenida + 1
 fin
+
 ```
 ##
 ### 12. Con los conocimientos adquiridos en éste curso de ingreso, piense si sería posible aplicar modularización a estos ejercicios. Justifique. En caso de poder utilizar modularización, resuelva el ejercicio.
@@ -505,26 +576,26 @@ fin
 ### (a) Programe al robot para recorrer la avenida 1 hasta encontrar una esquina vacía. Durante el recorrido debe juntar las flores de las esquinas transitadas.
 ### Luego, el robot debe realizar un cuadrado, partiendo desde (1,1), cuyo tamaño de lado se corresponde con la cantidad de flores juntadas en la avenida 1. Suponga que la avenida 1 tiene a lo sumo 99 flores.
 ```
-{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
+SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE ARGUMENTOS
 ```
 ##
 ### (b) Programe al robot para recorrer 15 cuadrados los cuales comienzan siempre en la esquina (1,1). El primer cuadrado tiene 15 cuadras de lado, el segundo 14 cuadras de lado, el tercero 13 cuadras de lado, y así siguiendo.
 ```
-{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
+SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE ARGUMENTOS
 ```
 ##
 ### (c) Programe al robot para recorrer la ciudad hasta encontrar una esquina con papel o sin flor.
 ```
-{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
+SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE ARGUMENTOS
 ```
 ##
 ### (d) Programe al robot para que recorra toda la ciudad por avenidas juntando flores y papeles. Al finalizar el recorrido informar la cantidad total de papeles y flores juntadas.
 ```
 proceso juntarFyP
 comenzar
-  mientras(HayFlorEnLaEsquina)
+  mientras (HayFlorEnLaEsquina)
     tomarFlor
-  mientras(HayPapelEnLaEsquina)
+  mientras (HayPapelEnLaEsquina)
     tomarPapel
 fin
 
@@ -538,7 +609,7 @@ comenzar
     Pos(avenida, 1)
     repetir 100
       juntarFyP
-      si(PosCa < 100)
+      si (PosCa < 100)
         mover
     avenida := avenida + 1
 fin
@@ -551,18 +622,19 @@ comenzar
   flores := 0
   papeles := 0
 
-  mientras(HayFlorEnLaBolsa)
+  mientras (HayFlorEnLaBolsa)
     depositarFlor
     flores := flores + 1
 
-  mientras(HayPapelEnLaBolsa)
+  mientras (HayPapelEnLaBolsa)
     depositarPapel
     papeles := papeles + 1
 
   Informar('Flores', flores)
   Informar('Papeles', papeles)
 fin
-
+```
+```
 robot robot1
 comenzar
   recorrerAvsJuntando

@@ -10,7 +10,7 @@ fin
 ```
 ##
 ### 2. Utilice el proceso desarrollado en 1. para realizar un programa para cada uno de los recorridos de la figura 6.9.
-![Figura 6.9: Recorridos usando cuadrados de lado 2](img/fig-6.9.png)
+![Figura 6.9: Recorridos usando cuadrados de lado 2](/img/fig-6.9.png)
 
 ### a
 ```
@@ -48,7 +48,7 @@ fin
 ```
 ##
 ### 4. Programe al Robot para que realice los recorridos de la figura 6.10 utilizando el proceso desarrollado en 3.
-![Figura 6.10: Recorridos usando rectángulos de 5x3.](img/fig-6.10.png)
+![Figura 6.10: Recorridos usando rectángulos de 5x3.](/img/fig-6.10.png)
 ### a
 ```
 robot robot1
@@ -313,7 +313,7 @@ comenzar
   floresEsq := 0
   mientras (floresEsq < 3)
     floresEsq := 0
-    mientras(HayFlorEnLaEsquina)
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       floresEsq := floresEsq + 1
     mover
