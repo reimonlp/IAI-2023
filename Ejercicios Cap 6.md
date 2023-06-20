@@ -63,12 +63,15 @@ fin
 ### b
 ```
 robot robot1
+variables
+  actual: numero
 comenzar
-  rectangulo3x5
-  Pos(2, 2)
-  rectangulo3x5
-  Pos(3, 3)
-  rectangulo3x5  
+  actual := 1
+
+  repetir 3
+    Pos(actual, actual)
+    rectangulo3x5
+    actual := actual + 1
 fin
 ```
 ### c
@@ -85,14 +88,19 @@ comenzar
 fin
 
 robot robot1
+variables
+  avenida: numero
 comenzar
-  rectangulo3x5
-  Pos(7, 1)
-  rectangulo5x3
-  Pos(11, 1)
-  rectangulo3x5
-  Pos(17, 1)
-  rectangulo5x3
+  avenida := 1
+
+  repetir 2
+    Pos(avenida, 1)
+    rectangulo3x5
+    avenida := avenida + 6
+    
+    Pos(avenida, 1)
+    rectangulo5x3
+    avenida := avenida + 4
 fin
 ```
 ##
@@ -119,6 +127,7 @@ comenzar
       mover
     dejarPapeles
     derecha
+
     mover
     repetir 4
       juntarPapeles
@@ -136,6 +145,7 @@ comenzar
       mover
     dejarPapeles
     derecha
+
     mover
     repetir 2
       juntarPapeles
@@ -145,14 +155,19 @@ comenzar
 fin
 
 robot robot1
+variables
+  avenida: numero
 comenzar
-  rectangulo3x5juntaPapeles
-  Pos(7, 1)
-  rectangulo5x3juntaPapeles
-  Pos(11, 1)
-  rectangulo3x5juntaPapeles
-  Pos(17, 1)
-  rectangulo5x3juntaPapeles
+  avenida := 1
+
+  repetir 2
+    Pos(avenida, 1)
+    rectangulo3x5juntaPapeles
+    avenida := avenida + 6
+    
+    Pos(avenida, 1)
+    rectangulo5x3juntaPapeles
+    avenida := avenida + 4
 fin
 ```
 ##
@@ -222,12 +237,15 @@ fin
 ### 7. (d) Rehacer el recorrido 4.b) utilizando el proceso definido en 7.c)
 ```
 robot robot1
+variables
+  actual: numero
 comenzar
-  rectangulo3x5antihorarioLimpiador
-  Pos(2, 2)
-  rectangulo3x5antihorarioLimpiador
-  Pos(3, 3)
-  rectangulo3x5antihorarioLimpiador
+  actual := 1
+
+  repetir 3
+    Pos(actual, actual)
+    rectangulo3x5antihorarioLimpiador
+    actual := actual + 1
 fin
 ```
 ##
@@ -238,15 +256,33 @@ comenzar
   repetir 3
     derecha
 fin
+
+proceso juntarFlores
+comenzar
+  mientras (HayFlorEnLaEsquina)
+    tomarFlor
+fin
+
+proceso juntarPapeles
+comenzar
+  mientras (HayPapelEnLaEsquina)
+    tomarPapel
+fin
+
 proceso RecorrerAvenida
 comenzar
   repetir 99
+    juntarFlores
     mover
+  juntarFlores
 fin
+
 proceso RecorrerCalle
 comenzar
   repetir 99
+    juntarPapeles
     mover
+  juntarPapeles
 fin
 
 robot robot1
@@ -258,9 +294,11 @@ comenzar
     Pos(actual, 1)
     RecorrerAvenida
     derecha
+
     Pos(1, actual)
     RecorrerCalle
     izquierda
+
     actual := actual + 1
 fin
 
