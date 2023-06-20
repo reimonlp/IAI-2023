@@ -1,3 +1,6 @@
+## Ejercicios de Repaso
+### Nota: En los ejercicios de programación debe utilizar Modularización.
+
 ### 1. Programe al robot para recorrer todas las avenidas de la ciudad. Cada avenida debe recorrerse sólo hasta encontrar una esquina vacía (sin flor ni papel) que seguro existe; al encontrar la esquina, debe informar si la avenida tuvo a lo sumo 45 flores.
 ### Nota: No modifique el contenido de las esquinas.
 ```
