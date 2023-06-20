@@ -7,11 +7,11 @@
 proceso recorrerAv
 variables
   flores: numero
-  forzarSig: boolean
+  interrumpir: boolean
 comenzar
-  forzarSig := F
+  interrumpir := F
 
-  mientras (~(~HayFlorEnLaEsquina & ~HayPapelEnLaEsquina) & ~forzarSig)
+  mientras (~(~HayFlorEnLaEsquina & ~HayPapelEnLaEsquina) & ~interrumpir)
     flores := 0
     mientras(HayFlorEnLaEsquina)
       tomarFlor
@@ -23,7 +23,7 @@ comenzar
     si (PosCa < 100)
       mover
     si (PosCa = 100)
-      forzarSig := V
+      interrumpir := V
 
   Informar('aLoSumo45Flores', flores >= 45)
 fin
@@ -91,10 +91,10 @@ comenzar
 proceso recorrerCalle
 variables
   flores: numero
-  forzarSig: boolean
+  interrumpir: boolean
 comenzar
-  forzarSig := F
-  mientras(flores < 10 & ~forzarSig)
+  interrumpir := F
+  mientras(flores < 10 & ~interrumpir)
     mientras(HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
@@ -102,7 +102,7 @@ comenzar
     si(PosAv < 100)
       mover
     si(PosAv = 100)
-      forzarSig := V
+      interrumpir := V
 fin
 
 proceso izquierda
@@ -152,10 +152,10 @@ fin
 proceso recorrerCalle
 variables
   flores: numero
-  forzarSig: boolean
+  interrumpir: boolean
 comenzar
-  forzarSig := F
-  mientras(flores < 10 & ~forzarSig)
+  interrumpir := F
+  mientras(flores < 10 & ~interrumpir)
     mientras(HayFlorEnLaEsquina & flores < 10)
       tomarFlor
       flores := flores + 1
@@ -163,7 +163,7 @@ comenzar
     si(PosAv < 100)
       mover
     si(PosAv = 100 | flores = 10)
-      forzarSig := V
+      interrumpir := V
 fin
 ```
 ##
@@ -451,6 +451,53 @@ fin
 ### 11. Realice un programa que le permita al robot recorrer todas las avenidas de la ciudad. Cada avenida debe recorrerse hasta encontrar una esquina con exactamente 50 objetos (suma entre flores y papeles, por ejemplo: 20 flores y 30 papeles). Al finalizar cada avenida debe informar V, si encontró más flores que papeles, o F en caso contrario.
 ### Nota: La esquina con 50 objetos puede no existir en cada avenida. No debe modificar el contenido de las esquinas.
 ```
+recorrerAv50Objetos
+variables
+  flores: numero
+  papeles: numero
+  cumple: boolean
+  interrumpir: boolean
+comenzar
+  flores := 0
+  papeles := 0
+  cumple := F
+  interrumpir := F
+
+  mientras(~interrumpir)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+    repetir flores
+      depositarFlor
+
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+    repetir papeles
+      depositarPapel
+
+    cumple := ((flores + papeles) = 50)
+
+    si(PosCa = 100 | cumple)
+      interrumpir := V
+    sino
+      mover
+
+    flores := 0
+    papeles := 0
+
+  Informar('MasFloresQuePapeles', flores > papeles)
+fin
+
+robot robot1
+variables
+  avenida
+comenzar
+  avenida := 1
+  repetir 100
+    Pos(avenida, 1)
+    recorrerAv50Objetos
+fin
 ```
 ##
 ### 12. Con los conocimientos adquiridos en éste curso de ingreso, piense si sería posible aplicar modularización a estos ejercicios. Justifique. En caso de poder utilizar modularización, resuelva el ejercicio.
