@@ -593,9 +593,9 @@ fin
 ```
 proceso juntarFyP
 comenzar
-  mientras(HayFlorEnLaEsquina)
+  mientras (HayFlorEnLaEsquina)
     tomarFlor
-  mientras(HayPapelEnLaEsquina)
+  mientras (HayPapelEnLaEsquina)
     tomarPapel
 fin
 
@@ -609,7 +609,7 @@ comenzar
     Pos(avenida, 1)
     repetir 100
       juntarFyP
-      si(PosCa < 100)
+      si (PosCa < 100)
         mover
     avenida := avenida + 1
 fin
@@ -622,11 +622,11 @@ comenzar
   flores := 0
   papeles := 0
 
-  mientras(HayFlorEnLaBolsa)
+  mientras (HayFlorEnLaBolsa)
     depositarFlor
     flores := flores + 1
 
-  mientras(HayPapelEnLaBolsa)
+  mientras (HayPapelEnLaBolsa)
     depositarPapel
     papeles := papeles + 1
 
