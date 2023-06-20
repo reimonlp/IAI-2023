@@ -505,18 +505,69 @@ fin
 ### (a) Programe al robot para recorrer la avenida 1 hasta encontrar una esquina vacía. Durante el recorrido debe juntar las flores de las esquinas transitadas.
 ### Luego, el robot debe realizar un cuadrado, partiendo desde (1,1), cuyo tamaño de lado se corresponde con la cantidad de flores juntadas en la avenida 1. Suponga que la avenida 1 tiene a lo sumo 99 flores.
 ```
+{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
 ```
 ##
 ### (b) Programe al robot para recorrer 15 cuadrados los cuales comienzan siempre en la esquina (1,1). El primer cuadrado tiene 15 cuadras de lado, el segundo 14 cuadras de lado, el tercero 13 cuadras de lado, y así siguiendo.
 ```
+{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
 ```
 ##
 ### (c) Programe al robot para recorrer la ciudad hasta encontrar una esquina con papel o sin flor.
 ```
+{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
 ```
 ##
 ### (d) Programe al robot para que recorra toda la ciudad por avenidas juntando flores y papeles. Al finalizar el recorrido informar la cantidad total de papeles y flores juntadas.
 ```
+proceso juntarFyP
+comenzar
+  mientras(HayFlorEnLaEsquina)
+    tomarFlor
+  mientras(HayPapelEnLaEsquina)
+    tomarPapel
+fin
+
+proceso recorrerAvsJuntando
+variables
+  avenida: numero
+comenzar
+  avenida := 1
+
+  repetir 100
+    Pos(avenida, 1)
+    repetir 100
+      juntarFyP
+      si(PosCa < 100)
+        mover
+    avenida := avenida + 1
+fin
+
+proceso contarInformar
+variables
+  flores: numero
+  papeles: numero
+comenzar
+  flores := 0
+  papeles := 0
+
+  mientras(HayFlorEnLaBolsa)
+    depositarFlor
+    flores := flores + 1
+
+  mientras(HayPapelEnLaBolsa)
+    depositarPapel
+    papeles := papeles + 1
+
+  Informar('Flores', flores)
+  Informar('Papeles', papeles)
+fin
+
+robot robot1
+comenzar
+  recorrerAvsJuntando
+  contarInformar
+fin
 ```
 ##
 ### 13. Convierta el número 143 a binario y a hexadecimal.
