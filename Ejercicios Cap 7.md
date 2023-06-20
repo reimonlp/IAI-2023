@@ -468,21 +468,29 @@ proceso recorrerCiudadBuscando
 variables
   avenida: numero
   cumple: boolean
+  interrumpir: boolean
 comenzar
   avenida := 1
   cumple := F
+  interrumpir := F
 
-  mientras(avenida <= 100 & ~cumple)
+  mientras ~(interrumpir)
     Pos(avenida, 1)
-    mientras(~cumple & PosCa < 100)
-      cumple := (HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
-      si (~cumple)
+    mientras (~interrumpir)
+      cumple := ((HayFlorEnLaEsquina) & ~(HayPapelEnLaEsquina))
+      
+      si ((cumple) | (PosCa = 100))
+        interrumpir := V
+      sino
         mover
-    cumple := (HayFlorEnLaEsquina & ~HayPapelEnLaEsquina)
+        
+    interrumpir := ((cumple) | (PosAv = 100))
+    avenida := avenida + 1
 
   si (cumple)
     derecha
     recorrerCalle20
+fin
 
 proceso recorrerCalle20
 variables
@@ -495,8 +503,10 @@ comenzar
     mientras(HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
+      
     si(PosAv < 100)
       mover
+      
   Informar('totalFloresJuntadas', flores)
 fin
 ```
