@@ -27,7 +27,8 @@ comenzar
 
   Informar('aLoSumo45Flores', flores >= 45)
 fin
-
+```
+```
 robot robot1
 variables
   avenida: numero
@@ -62,7 +63,8 @@ comenzar
       juntarFyP
       mover
 fin
-
+```
+```
 robot robot1
 variables
   flores: numero
@@ -124,7 +126,8 @@ comenzar
     mover
   juntarPapeles
 fin
-
+```
+```
 robot robot1
 variables
   calle: numero
@@ -195,7 +198,8 @@ comenzar
       mover
   Informar('esquinasDobleDeFloresQuePapeles', doblesFP)
 fin
-
+```
+```
 robot robot1
 variables
   calle: numero
@@ -259,7 +263,8 @@ comenzar
   si (vacia)
     Informar('PasosDados', pasos)
 fin
-
+```
+```
 robot robot1
 variables
   avenida: numero
@@ -300,7 +305,8 @@ comenzar
 
   Informar('MasPapelesQueFlores', papeles > flores)
 fin
-
+```
+```
 robot robot1
 variables
   calle: numero
@@ -355,7 +361,8 @@ comenzar
   
   Informar('esquinasSolamenteTenianFlor', soloFlor)
 fin
-
+```
+```
 robot robot1
 variables
   avenida: numero
@@ -396,7 +403,8 @@ comenzar
   mientras(HayFlorEnLaEsquina & ~HayPapelEnLaEsquina & PosCa < 100)
     mover
 fin
-
+```
+```
 robot robot1
 comenzar
   perimetro
@@ -441,7 +449,8 @@ comenzar
       mover
   Informar('totalFloresJuntadas', flores)
 fin
-
+```
+```
 robot robot1
 comenzar
   recorrerCiudadBuscando
@@ -488,7 +497,8 @@ comenzar
 
   Informar('MasFloresQuePapeles', flores > papeles)
 fin
-
+```
+```
 robot robot1
 variables
   avenida
@@ -562,7 +572,8 @@ comenzar
   Informar('Flores', flores)
   Informar('Papeles', papeles)
 fin
-
+```
+```
 robot robot1
 comenzar
   recorrerAvsJuntando
