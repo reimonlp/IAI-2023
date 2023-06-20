@@ -520,26 +520,27 @@ fin
 ### 11. Realice un programa que le permita al robot recorrer todas las avenidas de la ciudad. Cada avenida debe recorrerse hasta encontrar una esquina con exactamente 50 objetos (suma entre flores y papeles, por ejemplo: 20 flores y 30 papeles). Al finalizar cada avenida debe informar V, si encontró más flores que papeles, o F en caso contrario.
 ### Nota: La esquina con 50 objetos puede no existir en cada avenida. No debe modificar el contenido de las esquinas.
 ```
-recorrerAv50Objetos
+proceso recorrerAv50Objetos
 variables
   flores: numero
   papeles: numero
   cumple: boolean
   interrumpir: boolean
 comenzar
-  flores := 0
-  papeles := 0
   cumple := F
   interrumpir := F
 
-  mientras(~interrumpir)
-    mientras(HayFlorEnLaEsquina)
+  mientras ~(interrumpir)
+    flores := 0
+    papeles := 0
+    
+    mientras (HayFlorEnLaEsquina)
       tomarFlor
       flores := flores + 1
     repetir flores
       depositarFlor
 
-    mientras(HayPapelEnLaEsquina)
+    mientras (HayPapelEnLaEsquina)
       tomarPapel
       papeles := papeles + 1
     repetir papeles
@@ -547,27 +548,27 @@ comenzar
 
     cumple := ((flores + papeles) = 50)
 
-    si(PosCa = 100 | cumple)
+    si ((PosCa = 100) | (cumple))
       interrumpir := V
     sino
       mover
 
-    flores := 0
-    papeles := 0
-
-  Informar('MasFloresQuePapeles', flores > papeles)
+  Informar('MasFloresQuePapeles', (flores > papeles))
 fin
 ```
 ```
 robot robot1
 variables
-  avenida
+  avenida: numero
 comenzar
   avenida := 1
-  repetir 100
+  
+  repetir 10
     Pos(avenida, 1)
     recorrerAv50Objetos
+    avenida := avenida + 1
 fin
+
 ```
 ##
 ### 12. Con los conocimientos adquiridos en éste curso de ingreso, piense si sería posible aplicar modularización a estos ejercicios. Justifique. En caso de poder utilizar modularización, resuelva el ejercicio.
