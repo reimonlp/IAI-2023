@@ -11,7 +11,7 @@ variables
 comenzar
   interrumpir := F
 
-  mientras (~(~HayFlorEnLaEsquina & ~HayPapelEnLaEsquina) & ~interrumpir)
+  mientras ((HayFlorEnLaEsquina | HayPapelEnLaEsquina) & ~interrumpir)
     flores := 0
     mientras(HayFlorEnLaEsquina)
       tomarFlor
@@ -20,13 +20,14 @@ comenzar
     repetir flores
       depositarFlor
 
-    si (PosCa < 100)
-      mover
     si (PosCa = 100)
       interrumpir := V
+    sino
+      mover
 
   Informar('aLoSumo45Flores', flores >= 45)
 fin
+
 ```
 ```
 robot robot1
@@ -52,16 +53,44 @@ comenzar
     tomarPapel
 fin
 
-proceso rectangulo
+proceso contarInformar
+variables
+  flores: numero
+  papeles: numero
 comenzar
-  repetir 2
-    juntarFyP
-    mover
+  flores := 0
+  papeles := 0
 
-    derecha
-    repetir 15
+  mientras(HayFlorEnLaBolsa)
+    depositarFlor
+    flores := flores + 1
+
+  mientras(HayPapelEnLaBolsa)
+    depositarPapel
+    papeles := papeles + 1
+
+  Informar('Flores', flores)
+  Informar('Papeles', papeles)
+fin
+
+proceso rectangulo
+variables
+  base: numero
+  alto: numero
+comenzar
+  base := 15
+  alto := 1
+
+  repetir 2
+    repetir alto
       juntarFyP
       mover
+    derecha
+
+    repetir base
+      juntarFyP
+      mover
+    derecha
 fin
 ```
 ```
@@ -77,15 +106,8 @@ comenzar
     rectangulo
     Pos(1, PosCa + 2)
 
-  mientras(HayFlorEnLaBolsa)
-    depositarFlor
-    flores := flores + 1
-  Informar('flores', flores)
-
-  mientras(HayPapelEnLaBolsa)
-    depositarPapel
-    papeles := papeles + 1
-  Informar('papeles', papeles)
+  contarInformar
+fin
 ```
 ##
 ### 3. Programe al robot para que recorra las calles impares de la ciudad. Cada calle debe recorrerse hasta juntar al menos 10 flores (que pueden no existir). Una vez que ha recorrido todas las calles debe recorrer la avenida 10, la avenida 11, y la avenida 12 juntando todos los papeles.
