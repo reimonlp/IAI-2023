@@ -4,23 +4,208 @@
 ### 1. Programe al robot para recorrer todas las avenidas de la ciudad. Cada avenida debe recorrerse sólo hasta encontrar una esquina vacía (sin flor ni papel) que seguro existe; al encontrar la esquina, debe informar si la avenida tuvo a lo sumo 45 flores.
 ### Nota: No modifique el contenido de las esquinas.
 ```
+proceso recorrerAv
+variables
+  flores: numero
+  forzarSig: boolean
+comenzar
+  forzarSig := F
+  mientras (~(~HayFlorEnLaEsquina & ~HayPapelEnLaEsquina) & ~forzarSig)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+
+    si (PosCa < 100)
+      mover
+    si (PosCa = 100)
+      forzarSig := V
+
+  Informar('aLoSumo45Flores', flores >= 45)
+fin
+
+robot robot1
+variables
+  avenida: numero
+comenzar
+  avenida := 1
+  repetir 100
+    Pos(avenida, 1)
+    recorrerAv
+    avenida := avenida + 1
+fin
 ```
 ##
 ### 2. Programe al robot para realizar 6 rectángulos, de altura 1 y base 15. El primer rectángulo comienza en (1,1), el segundo en (1,3), el tercero en (1,5) y así siguiendo. Durante el recorrido del rectángulo debe juntar todas las flores y papeles.
 ### Al completar el recorrido, debe informar la cantidad total de flores y de papeles que tiene en la bolsa.
 ```
+proceso juntarFyP
+comenzar
+  mientras(HayFlorEnLaEsquina)
+    tomarFlor
+  mientras(HayPapelEnLaEsquina)
+    tomarPapel
+fin
+
+proceso rectangulo
+comenzar
+  repetir 2
+    juntarFyP
+    mover
+
+    derecha
+    repetir 15
+      juntarFyP
+      mover
+fin
+
+robot robot1
+variables
+  flores: numero
+  papeles: numero
+comenzar
+  flores := 0
+  papeles := 0
+
+  repetir 6
+    rectangulo
+    Pos(1, PosCa + 2)
+
+  mientras(HayFlorEnLaBolsa)
+    depositarFlor
+    flores := flores + 1
+  Informar('flores', flores)
+
+  mientras(HayPapelEnLaBolsa)
+    depositarPapel
+    papeles := papeles + 1
+  Informar('papeles', papeles)
 ```
 ##
 ### 3. Programe al robot para que recorra las calles impares de la ciudad. Cada calle debe recorrerse hasta juntar al menos 10 flores (que pueden no existir). Una vez que ha recorrido todas las calles debe recorrer la avenida 10, la avenida 11, y la avenida 12 juntando todos los papeles.
 ```
+proceso recorrerCalle
+variables
+  flores: numero
+  forzarSig: boolean
+comenzar
+  forzarSig := F
+  mientras(flores < 10 & ~forzarSig)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+
+    si(PosAv < 100)
+      mover
+    si(PosAv = 100)
+      forzarSig := V
+fin
+
+proceso izquierda
+comenzar
+  repetir 3
+    derecha
+fin
+
+proceso juntarPapeles
+comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+fin
+
+proceso recorrerAvenida
+comenzar
+  repetir 99
+    juntarPapeles
+    mover
+  juntarPapeles
+fin
+
+robot robot1
+variables
+  calle: numero
+  avenida: numero
+comenzar
+  calle := 1
+  avenida := 10
+
+  derecha
+  repetir 50
+    Pos(1, calle)
+    recorrerCalle
+    calle := calle + 2
+
+  izquierda
+  repetir 3
+    Pos(avenida, 1)
+    recorrerAvenida
+    avenida := avenida + 1
+fin
 ```
 ##
 ### 4. Modifique el ejercicio 3 para que cada calle se recorra hasta juntar exactamente 10 flores.
 ```
+proceso recorrerCalle
+variables
+  flores: numero
+  forzarSig: boolean
+comenzar
+  forzarSig := F
+  mientras(flores < 10 & ~forzarSig)
+    mientras(HayFlorEnLaEsquina & flores < 10)
+      tomarFlor
+      flores := flores + 1
+
+    si(PosAv < 100)
+      mover
+    si(PosAv = 100 | flores = 10)
+      forzarSig := V
+fin
 ```
 ##
 ### 5. Programe al robot para recorrer las primeras 10 calles de la ciudad. En cada calle debe juntar las flores y los papeles. Al finalizar cada calle informar la cantidad de esquinas con el doble de flores que papeles.
 ```
+recorrerCalleDobleFP
+variables
+  flores: numero
+  papeles: numero
+  doblesFP: numero
+comenzar
+  flores := 0
+  papeles := 0
+  doblesFP := 0
+
+  repetir 100
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores := flores + 1
+
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles := papeles + 1
+    
+    si (flores = (papeles * 2))
+      doblesFP := doblesFP + 1
+    
+    si(PosAv < 100)
+      mover
+  Informar('esquinasDobleDeFloresQuePapeles', doblesFP)
+fin
+
+robot robot1
+variables
+  calle: numero
+comenzar
+  calle := 1
+
+  derecha
+  repetir 10
+    Pos(1, calle)
+    recorrerCalleDobleFP
+    calle := calle + 1
+fin
 ```
 ##
 ### 6. Programe al robot para recorrer las avenidas de la ciudad de la siguiente forma. Las avenidas impares debe recorrerlas hasta encontrar una esquina con exactamente 3 flores o 15 papeles (la esquina seguro existe). En las avenidas pares debe avanzar hasta encontrar una esquina vacía (la esquina puede no existir), y si la encuentra debe informar la cantidad de pasos dados.
