@@ -576,17 +576,17 @@ fin
 ### (a) Programe al robot para recorrer la avenida 1 hasta encontrar una esquina vacía. Durante el recorrido debe juntar las flores de las esquinas transitadas.
 ### Luego, el robot debe realizar un cuadrado, partiendo desde (1,1), cuyo tamaño de lado se corresponde con la cantidad de flores juntadas en la avenida 1. Suponga que la avenida 1 tiene a lo sumo 99 flores.
 ```
-{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
+SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE ARGUMENTOS
 ```
 ##
 ### (b) Programe al robot para recorrer 15 cuadrados los cuales comienzan siempre en la esquina (1,1). El primer cuadrado tiene 15 cuadras de lado, el segundo 14 cuadras de lado, el tercero 13 cuadras de lado, y así siguiendo.
 ```
-{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
+SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE ARGUMENTOS
 ```
 ##
 ### (c) Programe al robot para recorrer la ciudad hasta encontrar una esquina con papel o sin flor.
 ```
-{ SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE PARAMETROS }
+SOLUCION NO MODULARIZABLE SIN UTILIZAR PASAJE DE ARGUMENTOS
 ```
 ##
 ### (d) Programe al robot para que recorra toda la ciudad por avenidas juntando flores y papeles. Al finalizar el recorrido informar la cantidad total de papeles y flores juntadas.
